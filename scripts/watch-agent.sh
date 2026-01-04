@@ -1,4 +1,3 @@
-bash
 #!/bin/bash
 # Papercage Intercom
 SOCKET="/opt/ai-agent/sockets/console.sock"

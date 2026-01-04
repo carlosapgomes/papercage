@@ -4,11 +4,18 @@ net none
 private
 
 # Whitelists
+# Simplified Whitelists in ai-agent.profile
 whitelist /opt/ai-bin
 whitelist /opt/ai-agent/workspace
 whitelist /opt/ai-agent/sockets
-whitelist /run/isoproxy/isoproxy.sock
 noblacklist /opt/ai-agent/sockets
+# whitelist /opt/ai-bin
+# whitelist /opt/ai-agent/workspace
+# whitelist /opt/ai-agent/sockets
+# whitelist /run/isoproxy/isoproxy.sock
+# whitelist /opt/ai-agent/sockets/isoproxy.sock
+# noblacklist /opt/ai-agent/sockets
+# noblacklist /run/isoproxy
 
 # Hardening
 caps.drop all

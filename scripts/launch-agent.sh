@@ -1,4 +1,3 @@
-bash
 #!/bin/bash
 # Main Papercage Launch Engine
 
@@ -19,16 +18,20 @@ trap "sudo kill $DEVPI_PID; exit" SIGINT SIGTERM
 
 # --- The Cage ---
 echo "🚀 Papercage: Starting $BINARY_CELL..."
-sudo -u "$AGENT_USER" firejail --profile=../profiles/ai-agent.profile \
+sudo -u "$AGENT_USER" firejail --ignore=apparmor --profile=../profiles/ai-agent.profile \
   --env=ANTHROPIC_AUTH_TOKEN="$ANTHROPIC_AUTH_TOKEN" \
   --env=ANTHROPIC_BASE_URL="http://127.0.0.1:8080" \
+  --env=CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC='1' \
   --env=PIP_INDEX_URL="http://127.0.0.1:3141/root/pypi/+simple/" \
   --env=PIP_TRUSTED_HOST="127.0.0.1" \
   bash -c "
     # Inner Bridges
-    socat TCP4-LISTEN:8080,reuseaddr,fork UNIX-CONNECT:\"$ISOPROXY_UDS\" &
-    socat TCP4-LISTEN:3141,reuseaddr,fork UNIX-CONNECT:\"$SOCKET_DIR/devpi.sock\" &
+    echo 'Checking socket visibility inside jail:'
+    ls -la /run/isoproxy/
+    sleep 5
+    /usr/bin/socat TCP4-LISTEN:8080,reuseaddr,fork UNIX-CONNECT:/opt/ai-agent/sockets/isoproxy.sock &
+    /usr/bin/socat TCP4-LISTEN:3141,reuseaddr,fork UNIX-CONNECT:\"$SOCKET_DIR/devpi.sock\" &
 
     # Console Bridge (The UI)
-    socat UNIX-LISTEN:\"$SOCKET_DIR/console.sock\",reuseaddr,mode=666 EXEC:\"$BINARY_CELL --dangerously-skip-permissions\",pty,stderr
+    /usr/bin/socat UNIX-LISTEN:\"$SOCKET_DIR/console.sock\",reuseaddr,mode=666 EXEC:\"$BINARY_CELL --dangerously-skip-permissions\",pty,stderr
   "
