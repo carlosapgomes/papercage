@@ -1,4 +1,3 @@
-bash
 #!/bin/bash
 # Claude Code standalone binary strategy
 # Install as a normal user via: curl -fsSL https://claude.ai/install | sh
