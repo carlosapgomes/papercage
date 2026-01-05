@@ -35,6 +35,7 @@ echo "📝 Prompt: $PROMPT"
 
 # NOTE: No --uid 0, no --cap-add. Just unprivileged namespaces.
 sudo -u "$AGENT_USER" bwrap \
+	--die-with-parent \
 	--unshare-all \
 	--unshare-user \
 	--hostname papercage \
@@ -73,7 +74,6 @@ sudo -u "$AGENT_USER" bwrap \
         echo \"--- Papercage Active in $WORKDIR ---\"
         echo \"Working directory: \$(pwd)\"
 
-        # 5. Start Claude with prompt
-        echo \"$PROMPT\" | socat UNIX-LISTEN:$SOCKET_DIR/console.sock,reuseaddr,mode=666 \
-              EXEC:\"$BINARY_CELL --dangerously-skip-permissions\",pty,stderr
+        # 5. Start Claude with prompt using -p flag
+        $BINARY_CELL --dangerously-skip-permissions -p \"$PROMPT\"
     "
