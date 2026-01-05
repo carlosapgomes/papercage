@@ -8,6 +8,8 @@ private
 whitelist /opt/ai-bin
 whitelist /opt/ai-agent/workspace
 whitelist /opt/ai-agent/sockets
+whitelist /opt/ai-agent/sockets
+# Enable access to the sockets themselves
 noblacklist /opt/ai-agent/sockets
 # whitelist /opt/ai-bin
 # whitelist /opt/ai-agent/workspace
@@ -23,5 +25,5 @@ seccomp
 nonewprivs
 
 # Minimal Toolbox for Python/Node/Pip
-private-bin bash,sh,ls,cat,git,python3,node,npm,pytest,claude,socat,tail,stdbuf,grep,sed,awk,tr,sleep,rm,mkdir,pkill,which,id,whoami,env,stty
+private-bin bash,sh,ls,cat,git,python3,node,npm,pytest,claude,socat,tail,stdbuf,grep,sed,awk,tr,sleep,rm,mkdir,pkill,which,id,whoami,env,stty,iputils-ping
 
